@@ -13,9 +13,9 @@ def saveDetails():
     msg = "msg"  
     if request.method == "POST":  
         try:  
-            name = request.form["name"]  
-            email = request.form["email"]  
-            address = request.form["address"]  
+            name = request.form.get('name')  
+            email = request.form.get('email')  
+            address = request.form.get('address')  
             with sqlite3.connect("employee.db") as con:  
                 cur = con.cursor()  
                 cur.execute("INSERT into Employees (name, email, address) values (?,?,?)",(name,email,address))  
@@ -41,11 +41,11 @@ def view():
 
 @app.route("/view1",methods=["GET","POST"]) 
 def view1():
-    id = request.form["id"]
+    id = request.form.get('id')
     con = sqlite3.connect("employee.db")  
     con.row_factory = sqlite3.Row  
     cur = con.cursor()  
-    cur.execute("select * from Employees where id=?",id)  
+    cur.execute(f"select * from Employees where id={id}")  
     rows = cur.fetchall()  
     return render_template("view1.html",rows = rows)
  
@@ -60,11 +60,11 @@ def delete():
  
 @app.route("/deleterecord",methods = ["POST"])  
 def deleterecord():  
-    id = request.form["id"]  
+    id = request.form.get("id") 
     with sqlite3.connect("employee.db") as con:  
         try:  
             cur = con.cursor()  
-            cur.execute("delete from Employees where name = ?",id)  
+            cur.execute(f"delete from Employees where id ={id}")  
             msg = "record successfully deleted"  
         except:  
             msg = "can't be deleted"  
