@@ -1,8 +1,7 @@
 from flask import *  
 import sqlite3  
   
-app = Flask(__name__)  
-
+app = Flask(__name__) 
 con=sqlite3.connect('employee.db',check_same_thread=False)
 
 @app.route("/")  
@@ -12,25 +11,25 @@ def index():
  
 @app.route("/savedetails",methods = ["POST","GET"])  
 def saveDetails():  
-    msg = "msg" 
-    if request.method == "POST":
-        try:  
-            name = request.form.get('name')  
-            email = request.form.get('email')  
-            address = request.form.get('address')  
-            cur = con.cursor()  
-            cur.execute("INSERT into Employees (name, email, address) values (?,?,?)",(name,email,address))  
-            con.commit()  
-            msg = "Record successfully Added"  
-        except:  
-            con.rollback()  
-            msg = "We can not add the employee to the list"  
-        finally:  
-            return render_template("success.html",msg = msg)  
-            con.close()  
+    msg = "msg"  
+    if request.method == "POST":  
+            try:  
+                name = request.form.get("name")  
+                email = request.form.get("email")  
+                address = request.form.get("address") 
+                cur = con.cursor()  
+                cur.execute("INSERT into Employees (name, email, address) values (?,?,?)",(name,email,address))  
+                con.commit()  
+                msg = "Record successfully Added"  
+            except: 
+                con.rollback()  
+                msg = "We can not add the employee to the list"  
+            finally:
+                return render_template("success.html",msg = msg)  
+                con.close()  
  
 @app.route("/view")  
-def view():   
+def view():  
     con.row_factory = sqlite3.Row  
     cur = con.cursor()  
     cur.execute("select * from Employees")  
@@ -39,7 +38,7 @@ def view():
 
 @app.route("/view1",methods=["GET","POST"]) 
 def view1():
-    id = request.form.get('id') 
+    id = request.form.get("id") 
     con.row_factory = sqlite3.Row  
     cur = con.cursor()  
     cur.execute(f"select * from Employees where id={id}")  
@@ -57,15 +56,15 @@ def delete():
  
 @app.route("/deleterecord",methods = ["POST"])  
 def deleterecord():  
-    id = request.form.get("id")   
+    id = request.form.get("id")  
     try:  
         cur = con.cursor()  
-        cur.execute(f"delete from Employees where id ={id}")  
+        cur.execute(f"delete from Employees where id = {id}") 
         msg = "record successfully deleted"  
     except:  
         msg = "can't be deleted"  
     finally:  
-        return render_template("delete_record.html",msg = msg) 
+        return render_template("delete_record.html",msg = msg)   
 
  
 if __name__ == "__main__":  
