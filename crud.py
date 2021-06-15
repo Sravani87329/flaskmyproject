@@ -10,25 +10,23 @@ def index():
  
 @app.route("/savedetails",methods = ["POST","GET"])  
 def saveDetails():  
-    msg = "msg"  
+    msg = "msg" 
+    with sqlite3.connect("employee.db") as con:
     if request.method == "POST":  
         try:  
             name = request.form.get('name')  
             email = request.form.get('email')  
             address = request.form.get('address')  
-            with sqlite3.connect("employee.db") as con:  
-                cur = con.cursor()  
-                cur.execute("INSERT into Employees (name, email, address) values (?,?,?)",(name,email,address))  
-                con.commit()  
-                msg = "Record successfully Added"  
+            cur = con.cursor()  
+            cur.execute("INSERT into Employees (name, email, address) values (?,?,?)",(name,email,address))  
+            con.commit()  
+            msg = "Record successfully Added"  
         except:  
-            with sqlite3.connect("employee.db") as con:
-                con.rollback()  
-                msg = "We can not add the employee to the list"  
-        finally:
-            with sqlite3.connect("employee.db") as con:  
-                return render_template("success.html",msg = msg)  
-                con.close()  
+            con.rollback()  
+            msg = "We can not add the employee to the list"  
+        finally:  
+            return render_template("success.html",msg = msg)  
+            con.close()  
  
 @app.route("/view")  
 def view():  
