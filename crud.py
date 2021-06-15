@@ -2,7 +2,9 @@ from flask import *
 import sqlite3  
   
 app = Flask(__name__)  
- 
+
+con=sqlite3.connect('employee.db',check_same_thread=False)
+
 @app.route("/")  
 def index():  
     return render_template("index.html");  
@@ -12,7 +14,6 @@ def index():
 def saveDetails():  
     msg = "msg" 
     if request.method == "POST":
-      with sqlite3.connect("employee.db") as con:
         try:  
             name = request.form.get('name')  
             email = request.form.get('email')  
@@ -29,8 +30,7 @@ def saveDetails():
             con.close()  
  
 @app.route("/view")  
-def view():  
-    con = sqlite3.connect("employee.db")  
+def view():   
     con.row_factory = sqlite3.Row  
     cur = con.cursor()  
     cur.execute("select * from Employees")  
@@ -39,8 +39,7 @@ def view():
 
 @app.route("/view1",methods=["GET","POST"]) 
 def view1():
-    id = request.form.get('id')
-    con = sqlite3.connect("employee.db")  
+    id = request.form.get('id') 
     con.row_factory = sqlite3.Row  
     cur = con.cursor()  
     cur.execute(f"select * from Employees where id={id}")  
@@ -58,16 +57,15 @@ def delete():
  
 @app.route("/deleterecord",methods = ["POST"])  
 def deleterecord():  
-    id = request.form.get("id") 
-    with sqlite3.connect("employee.db") as con:  
-        try:  
-            cur = con.cursor()  
-            cur.execute(f"delete from Employees where id ={id}")  
-            msg = "record successfully deleted"  
-        except:  
-            msg = "can't be deleted"  
-        finally:  
-            return render_template("delete_record.html",msg = msg) 
+    id = request.form.get("id")   
+    try:  
+        cur = con.cursor()  
+        cur.execute(f"delete from Employees where id ={id}")  
+        msg = "record successfully deleted"  
+    except:  
+        msg = "can't be deleted"  
+    finally:  
+        return render_template("delete_record.html",msg = msg) 
 
  
 if __name__ == "__main__":  
