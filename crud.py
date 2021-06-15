@@ -11,8 +11,8 @@ def index():
 @app.route("/savedetails",methods = ["POST","GET"])  
 def saveDetails():  
     msg = "msg" 
-    with sqlite3.connect("employee.db") as con:
-    if request.method == "POST":  
+    if request.method == "POST":
+      with sqlite3.connect("employee.db") as con:
         try:  
             name = request.form.get('name')  
             email = request.form.get('email')  
