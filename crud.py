@@ -18,7 +18,8 @@ def saveDetails():
                 email = request.form.get("email")  
                 address = request.form.get("address") 
                 cur = con.cursor()  
-                cur.execute("INSERT into Employees (name, email, address) values (?,?,?)",(name,email,address))  
+                 cur.execute(f"INSERT into Employees (name, email, address) values ({name},{email},{address})")  
+                con.commit()    
                 con.commit()  
                 msg = "Record successfully Added"  
             except: 
